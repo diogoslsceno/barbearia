@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <title>Barber — Cadastro de Cliente</title>
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: 0;
+      }
+
+      :root {
+        --red: #d94140;
+        --red-hover: #c13030;
+        --bg-card: #0e1a26;
+        --bg-field: #162030;
+        --border: rgba(255, 255, 255, 0.1);
+        --text: #ffffff;
+        --text-sub: rgba(255, 255, 255, 0.55);
+        --text-muted: rgba(255, 255, 255, 0.3);
+        --error: #e05555;
+        --success: #2dc98a;
+        --font: "Sora", sans-serif;
+        --r-card: 14px;
+        --r-field: 8px;
+        --t: 0.25s ease;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family: var(--font);
+        background: #060c14;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 48px 16px 56px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* ── Background ── */
+      .bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-color: #060c14;
+      }
+
+      /* ── Logo ── */
+      .logo {
+        margin-bottom: 18px;
+        animation: fadeDown 0.55s ease both;
+      }
+      .logo img {
+        width: 160px;
+        filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.5));
+      }
+
+      /* ── Tagline ── */
+      .tagline {
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 32px;
+        opacity: 0.9;
+        animation: fadeDown 0.55s 0.08s ease both;
+        line-height: 1.7;
+        max-width: 460px;
+      }
+
+      /* ── Card ── */
+      .card {
+        width: 100%;
+        max-width: 520px;
+        background: var(--bg-card);
+        border-radius: var(--r-card);
+        padding: 36px 36px 32px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
+        animation: fadeUp 0.6s 0.12s ease both;
+      }
+
+      .card-title {
+        color: var(--text);
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 28px;
+        letter-spacing: -0.01em;
+      }
+
+      /* ── Avatar ── */
+      .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 28px;
+      }
+
+      .avatar-wrap {
+        position: relative;
+        width: 88px;
+        height: 88px;
+        cursor: pointer;
+      }
+
+      .avatar-circle {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background: var(--bg-field);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: border-color var(--t);
+      }
+
+      .avatar-wrap:hover .avatar-circle {
+        border-color: var(--red);
+      }
+
+      .avatar-circle i {
+        font-size: 32px;
+        color: var(--text-muted);
+      }
+
+      .avatar-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        display: none;
+      }
+
+      .avatar-cam {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 26px;
+        height: 26px;
+        background: var(--red);
+        border-radius: 50%;
+        border: 2px solid var(--bg-card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 10px;
+        transition: transform var(--t);
+      }
+
+      .avatar-wrap:hover .avatar-cam {
+        transform: scale(1.1);
+      }
+
+      .avatar-hint {
+        font-size: 11px;
+        color: var(--text-sub);
+      }
+
+      #avatarInput {
+        display: none;
+      }
+
+      /* ── Form ── */
+      .form-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .form-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field label {
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .field-wrap {
+        position: relative;
+      }
+
+      .field-wrap input,
+      .field-wrap select {
+        width: 100%;
+        background: var(--bg-field);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-field);
+        padding: 11px 14px;
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 13.5px;
+        transition:
+          border-color var(--t),
+          box-shadow var(--t);
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .field-wrap select {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 36px;
+      }
+
+      .field-wrap select option {
+        background: #162030;
+        color: #fff;
+      }
+
+      .field-wrap input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .field-wrap input:focus,
+      .field-wrap select:focus {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px rgba(217, 65, 64, 0.15);
+      }
+
+      .pwd-eye {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 13px;
+        padding: 4px;
+        line-height: 1;
+        transition: color var(--t);
+      }
+      .pwd-eye:hover {
+        color: var(--text);
+      }
+      .field-wrap input.with-eye {
+        padding-right: 40px;
+      }
+
+      /* Validation */
+      .field-wrap input.valid,
+      .field-wrap select.valid {
+        border-color: rgba(45, 201, 138, 0.5);
+      }
+      .field-wrap input.invalid,
+      .field-wrap select.invalid {
+        border-color: rgba(224, 85, 85, 0.6);
+        box-shadow: 0 0 0 3px rgba(224, 85, 85, 0.1);
+      }
+
+      .field-msg {
+        font-size: 11px;
+        font-weight: 500;
+        min-height: 13px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .field-msg.show {
+        opacity: 1;
+      }
+      .field-msg.error {
+        color: var(--error);
+      }
+      .field-msg.success {
+        color: var(--success);
+      }
+
+      /* Strength */
+      .strength-wrap {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 2px;
+        margin-top: 3px;
+        overflow: hidden;
+      }
+      .strength-bar {
+        height: 100%;
+        width: 0;
+        border-radius: 2px;
+        transition:
+          width 0.35s ease,
+          background 0.35s ease;
+      }
+
+      /* Divider */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 4px 0;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .divider span {
+        font-size: 10.5px;
+        color: var(--text-sub);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      /* ── Button ── */
+      .btn-submit {
+        width: 100%;
+        margin-top: 22px;
+        padding: 14px;
+        background: var(--red);
+        border: none;
+        border-radius: var(--r-field);
+        color: #fff;
+        font-family: var(--font);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background var(--t),
+          transform var(--t),
+          box-shadow var(--t);
+        box-shadow: 0 4px 20px rgba(217, 65, 64, 0.35);
+      }
+
+      .btn-submit:hover {
+        background: var(--red-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 28px rgba(217, 65, 64, 0.45);
+      }
+
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      .btn-submit.loading {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+
+      .btn-submit.loading .spinner {
+        display: block;
+      }
+      .btn-submit.loading .btn-label {
+        display: none;
+      }
+
+      /* ── LGPD ── */
+      .lgpd-block {
+        margin-top: 20px;
+        background: rgba(10, 37, 64, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 18px 18px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .lgpd-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(217, 65, 64, 0.12);
+        border: 1px solid rgba(217, 65, 64, 0.3);
+        color: #d94140;
+        font-size: 15px;
+        align-self: flex-start;
+      }
+
+      .lgpd-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12.5px;
+        line-height: 1.65;
+      }
+
+      .lgpd-text strong {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+      }
+
+      .lgpd-check-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .lgpd-check-label input[type="checkbox"] {
+        display: none;
+      }
+
+      .lgpd-check-box {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition:
+          background 0.22s ease,
+          border-color 0.22s ease;
+        color: transparent;
+        font-size: 11px;
+      }
+
+      .lgpd-check-label:hover .lgpd-check-box {
+        border-color: rgba(45, 201, 138, 0.55);
+      }
+
+      .lgpd-check-label input:checked ~ .lgpd-check-box {
+        background: rgba(45, 201, 138, 0.15);
+        border-color: rgba(45, 201, 138, 0.7);
+        color: #2dc98a;
+      }
+
+      .lgpd-check-text {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 12.5px;
+        font-weight: 500;
+        transition: color 0.22s ease;
+      }
+
+      .lgpd-check-label:hover .lgpd-check-text {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .lgpd-check-label input:checked ~ .lgpd-check-box ~ .lgpd-check-text {
+        color: #2dc98a;
+      }
+
+      /* ── Success ── */
+      .success-overlay {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        padding: 24px 0 8px;
+        text-align: center;
+      }
+      .success-overlay.show {
+        display: flex;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      .success-icon {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        background: rgba(45, 201, 138, 0.12);
+        border: 1.5px solid rgba(45, 201, 138, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--success);
+        font-size: 26px;
+      }
+
+      .success-title {
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .success-sub {
+        color: var(--text-sub);
+        font-size: 13px;
+        max-width: 280px;
+        line-height: 1.6;
+      }
+
+      .btn-novo {
+        margin-top: 4px;
+        padding: 10px 24px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-field);
+        background: transparent;
+        color: var(--text-sub);
+        font-family: var(--font);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          border-color var(--t),
+          color var(--t);
+      }
+      .btn-novo:hover {
+        border-color: var(--red);
+        color: #fff;
+      }
+
+      /* Footer */
+      .card-footer {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--text-sub);
+      }
+      .card-footer a {
+        color: var(--red);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .card-footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* ── Toast ── */
+      .toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 999;
+        padding: 12px 18px;
+        border-radius: 10px;
+        background: #0e1a26;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        transform: translateX(120%);
+        opacity: 0;
+        transition:
+          transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+          opacity 0.38s;
+        max-width: 300px;
+      }
+      .toast.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      .toast.toast-error .ti {
+        color: var(--error);
+      }
+      .toast.toast-success .ti {
+        color: var(--success);
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 560px) {
+        .card {
+          padding: 28px 20px 24px;
+        }
+        .form-row-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast" role="alert">
+      <i class="fa-solid ti" id="toastIcon"></i>
+      <span id="toastMsg"></span>
+    </div>
+
+    <!-- Logo -->
+    <div class="logo">
+      <img src="assets/logo.svg" alt="Barber" />
+    </div>
+
+    <!-- Tagline -->
+    <p class="tagline">
+      Estilo é um reflexo da sua atitude<br />e sua personalidade.
+    </p>
+
+    <!-- Card -->
+    <div class="card">
+      <h1 class="card-title">Cadastrar</h1>
+
+      <!-- Avatar -->
+      <div class="avatar-section">
+        <div
+          class="avatar-wrap"
+          onclick="document.getElementById('avatarInput').click()"
+          title="Adicionar foto"
+        >
+          <div class="avatar-circle">
+            <i class="fa-solid fa-user" id="avatarPlaceholder"></i>
+            <img
+              class="avatar-preview"
+              id="avatarPreview"
+              alt="Foto do cliente"
+            />
+          </div>
+          <div class="avatar-cam"><i class="fa-solid fa-camera"></i></div>
+        </div>
+        <span class="avatar-hint">Foto do Atendente</span>
+        <input type="file" id="avatarInput" accept="image/*" />
+      </div>
+
+      <!-- Form -->
+      <form id="cadastroForm" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <div class="field-wrap">
+              <input
+                type="text"
+                id="nome"
+                placeholder="Nome do cliente"
+                autocomplete="name"
+              />
+            </div>
+            <span class="field-msg" id="nome-msg"></span>
+          </div>
+
+          <div class="field">
+            <label for="telefone">Telefone</label>
+            <div class="field-wrap">
+              <input
+                type="tel"
+                id="telefone"
+                placeholder="(00) 00000-0000"
+                maxlength="15"
+                autocomplete="tel"
+              />
+            </div>
+            <span class="field-msg" id="telefone-msg"></span>
+          </div>
+
+          <div class="field">
+            <label for="email">E-mail</label>
+            <div class="field-wrap">
+              <input
+                type="email"
+                id="email"
+                placeholder="email@exemplo.com"
+                autocomplete="email"
+              />
+            </div>
+            <span class="field-msg" id="email-msg"></span>
+          </div>
+
+          <div class="form-row-2">
+            <div class="field">
+              <label for="senha">Senha</label>
+              <div class="field-wrap">
+                <input
+                  type="password"
+                  id="senha"
+                  class="with-eye"
+                  placeholder="Mínimo 6 caracteres"
+                />
+                <button
+                  type="button"
+                  class="pwd-eye"
+                  onclick="togglePwd('senha', this)"
+                  tabindex="-1"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="strength-wrap">
+                <div class="strength-bar" id="strengthBar"></div>
+              </div>
+              <span class="field-msg" id="senha-msg"></span>
+            </div>
+
+            <div class="field">
+              <label for="confirmar">Confirmar senha</label>
+              <div class="field-wrap">
+                <input
+                  type="password"
+                  id="confirmar"
+                  class="with-eye"
+                  placeholder="Repita a senha"
+                />
+                <button
+                  type="button"
+                  class="pwd-eye"
+                  onclick="togglePwd('confirmar', this)"
+                  tabindex="-1"
+                >
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <span class="field-msg" id="confirmar-msg"></span>
+            </div>
+          </div>
+
+          <div class="divider"><span>Preferências</span></div>
+
+          <div class="field">
+            <label for="servico">Serviço preferido</label>
+            <div class="field-wrap">
+              <select id="servico">
+                <option value="" disabled selected>Selecionar...</option>
+                <option value="corte">Corte Normal — R$ 45</option>
+                <option value="barba">Barba Completa — R$ 35</option>
+                <option value="cortebarba">Corte e Barba — R$ 85</option>
+              </select>
+            </div>
+            <span class="field-msg" id="servico-msg"></span>
+          </div>
+        </div>
+
+        <!-- LGPD -->
+        <div class="lgpd-block" id="lgpdBlock">
+          <p class="lgpd-text">
+            Declaro estar ciente da coleta e proteção dos meus dados pessoais
+            realizadas pelo sistema, conforme a
+            <strong
+              ><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank">Lei Geral de Proteção de Dados Pessoais (Lei nº
+              13.709/2018)</strong
+            >.
+          </p>
+          <label class="lgpd-check-label" id="lgpdLabel">
+            <input
+              type="checkbox"
+              id="lgpdCheckbox"
+              onchange="lgpdChoose(this.checked)"
+            />
+            <span class="lgpd-check-box"
+              ><i class="fa-solid fa-check"></i
+            ></span>
+            <span class="lgpd-check-text">Li e aceito os termos acima</span>
+          </label>
+          <span class="field-msg" id="lgpd-msg"></span>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <div class="spinner"></div>
+          <span class="btn-label">Enviar</span>
+        </button>
+
+        <div class="success-overlay" id="successOverlay">
+          <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+          <p class="success-title">Cliente Cadastrado!</p>
+          <p class="success-sub">
+            Cadastro realizado com sucesso. O cliente já pode agendar horários.
+          </p>
+          <button type="button" class="btn-novo" onclick="resetForm()">
+            <i class="fa-solid fa-plus" style="margin-right: 5px"></i>Novo
+            Cadastro
+          </button>
+        </div>
+      </form>
+
+      <p class="card-footer"><a href="index.html">← Voltar ao site</a></p>
+    </div>
+
+    <script>
+      document
+        .getElementById("avatarInput")
+        .addEventListener("change", function () {
+          const file = this.files[0]
+          if (!file) return
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            document.getElementById("avatarPreview").src = e.target.result
+            document.getElementById("avatarPreview").style.display = "block"
+            document.getElementById("avatarPlaceholder").style.display = "none"
+          }
+          reader.readAsDataURL(file)
+        })
+
+      document
+        .getElementById("telefone")
+        .addEventListener("input", function () {
+          let v = this.value.replace(/\D/g, "").slice(0, 11)
+          if (v.length > 10)
+            v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3")
+          else if (v.length > 6)
+            v = v.replace(/^(\d{2})(\d{4})(\d+)/, "($1) $2-$3")
+          else if (v.length > 2) v = v.replace(/^(\d{2})(\d+)/, "($1) $2")
+          this.value = v
+        })
+
+      function togglePwd(id, btn) {
+        const el = document.getElementById(id)
+        const ic = btn.querySelector("i")
+        if (el.type === "password") {
+          el.type = "text"
+          ic.className = "fa-solid fa-eye-slash"
+        } else {
+          el.type = "password"
+          ic.className = "fa-solid fa-eye"
+        }
+      }
+
+      document.getElementById("senha").addEventListener("input", function () {
+        const v = this.value
+        let s = 0
+        if (v.length >= 6) s++
+        if (v.length >= 10) s++
+        if (/[A-Z]/.test(v)) s++
+        if (/[0-9]/.test(v)) s++
+        if (/[^A-Za-z0-9]/.test(v)) s++
+        const bar = document.getElementById("strengthBar")
+        bar.style.width = (s / 5) * 100 + "%"
+        bar.style.background = s < 2 ? "#E05555" : s < 4 ? "#F0A843" : "#2DC98A"
+        checkMatch()
+      })
+
+      document.getElementById("confirmar").addEventListener("input", checkMatch)
+      function checkMatch() {
+        const s = document.getElementById("senha").value
+        const c = document.getElementById("confirmar").value
+        const el = document.getElementById("confirmar")
+        if (!c) {
+          el.className = "with-eye"
+          setMsg("confirmar-msg", "", "")
+          return
+        }
+        if (s === c) {
+          el.classList.add("valid")
+          el.classList.remove("invalid")
+          setMsg("confirmar-msg", "✓ Senhas coincidem", "success")
+        } else {
+          el.classList.add("invalid")
+          el.classList.remove("valid")
+          setMsg("confirmar-msg", "As senhas não coincidem", "error")
+        }
+      }
+
+      function setMsg(id, text, type) {
+        const el = document.getElementById(id)
+        el.textContent = text
+        el.className = "field-msg" + (type ? ` show ${type}` : "")
+      }
+      function markValid(id) {
+        document.getElementById(id).classList.add("valid")
+        document.getElementById(id).classList.remove("invalid")
+      }
+      function markInvalid(id) {
+        document.getElementById(id).classList.add("invalid")
+        document.getElementById(id).classList.remove("valid")
+      }
+      function clearState(id) {
+        document.getElementById(id).classList.remove("valid", "invalid")
+      }
+
+      document.getElementById("nome").addEventListener("blur", function () {
+        if (this.value.trim().length < 3) {
+          markInvalid("nome")
+          setMsg("nome-msg", "Informe o nome completo", "error")
+        } else {
+          markValid("nome")
+          setMsg("nome-msg", "", "")
+        }
+      })
+      document.getElementById("email").addEventListener("blur", function () {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
+          markInvalid("email")
+          setMsg("email-msg", "E-mail inválido", "error")
+        } else {
+          markValid("email")
+          setMsg("email-msg", "", "")
+        }
+      })
+      document.getElementById("telefone").addEventListener("blur", function () {
+        if (this.value.replace(/\D/g, "").length < 10) {
+          markInvalid("telefone")
+          setMsg("telefone-msg", "Telefone incompleto", "error")
+        } else {
+          markValid("telefone")
+          setMsg("telefone-msg", "", "")
+        }
+      })
+      document.getElementById("senha").addEventListener("blur", function () {
+        if (this.value.length < 6) {
+          markInvalid("senha")
+          setMsg("senha-msg", "Mínimo de 6 caracteres", "error")
+        } else {
+          markValid("senha")
+          setMsg("senha-msg", "", "")
+        }
+      })
+
+      let toastTmr
+      function showToast(msg, type = "error") {
+        const t = document.getElementById("toast")
+        document.getElementById("toastMsg").textContent = msg
+        document.getElementById("toastIcon").className =
+          `fa-solid ti ${type === "error" ? "fa-circle-exclamation" : "fa-circle-check"}`
+        t.className = `toast toast-${type} show`
+        clearTimeout(toastTmr)
+        toastTmr = setTimeout(() => {
+          t.className = "toast"
+        }, 3800)
+      }
+
+      document
+        .getElementById("cadastroForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault()
+          const nome = document.getElementById("nome").value.trim()
+          const email = document.getElementById("email").value.trim()
+          const telefone = document
+            .getElementById("telefone")
+            .value.replace(/\D/g, "")
+          const senha = document.getElementById("senha").value
+          const confirmar = document.getElementById("confirmar").value
+
+          if (nome.length < 3) {
+            markInvalid("nome")
+            setMsg("nome-msg", "Informe o nome completo", "error")
+            showToast("Preencha o nome completo.")
+            return
+          }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            markInvalid("email")
+            setMsg("email-msg", "E-mail inválido", "error")
+            showToast("Informe um e-mail válido.")
+            return
+          }
+          if (telefone.length < 10) {
+            markInvalid("telefone")
+            setMsg("telefone-msg", "Telefone incompleto", "error")
+            showToast("Informe um telefone válido.")
+            return
+          }
+          if (senha.length < 6) {
+            markInvalid("senha")
+            setMsg("senha-msg", "Mínimo de 6 caracteres", "error")
+            showToast("Senha muito curta.")
+            return
+          }
+          if (senha !== confirmar) {
+            markInvalid("confirmar")
+            setMsg("confirmar-msg", "Senhas não coincidem", "error")
+            showToast("As senhas não coincidem.")
+            return
+          }
+
+          if (!lgpdAccepted) {
+            setMsg(
+              "lgpd-msg",
+              "Você precisa aceitar os termos para continuar.",
+              "error"
+            )
+            document
+              .getElementById("lgpdBlock")
+              .scrollIntoView({ behavior: "smooth", block: "center" })
+            showToast("Aceite os termos da LGPD para continuar.")
+            return
+          }
+
+          const btn = document.getElementById("submitBtn")
+          btn.classList.add("loading")
+          setTimeout(() => {
+            btn.classList.remove("loading")
+            btn.style.display = "none"
+            document.getElementById("successOverlay").classList.add("show")
+            showToast("Cliente cadastrado com sucesso!", "success")
+          }, 1600)
+        })
+
+      let lgpdAccepted = null
+
+      function lgpdChoose(accepted) {
+        lgpdAccepted = accepted
+        if (accepted) {
+          setMsg("lgpd-msg", "✓ Termos aceitos.", "success")
+        } else {
+          setMsg("lgpd-msg", "", "")
+        }
+      }
+
+      function resetForm() {
+        document.getElementById("cadastroForm").reset()
+        document.getElementById("successOverlay").classList.remove("show")
+        document.getElementById("submitBtn").style.display = ""
+        document.getElementById("avatarPreview").style.display = "none"
+        document.getElementById("avatarPlaceholder").style.display = ""
+        ;["nome", "email", "telefone", "senha", "confirmar", "servico"].forEach(
+          (id) => {
+            clearState(id)
+            setMsg(id + "-msg", "", "")
+          }
+        )
+        document.getElementById("strengthBar").style.width = "0"
+        lgpdAccepted = null
+        document.getElementById("lgpdCheckbox").checked = false
+        setMsg("lgpd-msg", "", "")
+      }
+    </script>
+  </body>
+</html>

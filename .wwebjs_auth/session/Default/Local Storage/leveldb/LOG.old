@@ -1,0 +1,6 @@
+2026/05/26-17:35:20.060 7932 Reusing MANIFEST /home/diogo/Downloads/barbeariaBot-novo/barbearia/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2026/05/26-17:35:20.060 7932 Recovering log #3
+2026/05/26-17:35:20.061 7932 Reusing old log /home/diogo/Downloads/barbeariaBot-novo/barbearia/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2026/05/26-17:40:20.596 792f Level-0 table #5: started
+2026/05/26-17:40:20.601 792f Level-0 table #5: 16893 bytes OK
+2026/05/26-17:40:20.603 792f Delete type=0 #3
