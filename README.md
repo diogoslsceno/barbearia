@@ -1,68 +1,42 @@
-# Barber Bot — WhatsApp
+# ✂️ BarberBot - Sistema de Barbearia
 
-## ⚠️ Requisito: Node.js 18 ou superior
+Sistema profissional para barbearias com Landing Page moderna e Chatbot de agendamento automático via WhatsApp.
 
-### Atualizar Node.js no Linux (Ubuntu/Debian)
+## 🏗️ Arquitetura MVC & POO
+O projeto foi totalmente reestruturado seguindo o padrão **Model-View-Controller** e **Orientação a Objetos**, garantindo código limpo e fácil manutenção.
 
-```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-node --version   # deve mostrar v18.x.x ou superior
-```
+- **Models:** Gestão de dados (Serviços, Barbeiros) e controle de sessões de usuários.
+- **Views:** Templates de mensagens e menus personalizados.
+- **Controllers:** Lógica de roteamento de mensagens e funil de agendamento resiliente.
 
----
+## 🚀 Funcionalidades
+- ✅ Agendamento automático (Serviço > Barbeiro > Data > Horário).
+- ✅ Validação de datas (impede agendamentos passados ou em dias fechados).
+- ✅ Menu interativo com localização e serviços.
+- ✅ Landing Page responsiva com animações AOS.
+- ✅ Simulação de digitação humana no WhatsApp.
 
-## Instalação
+## 🛠️ Tecnologias
+- **Backend:** Node.js, [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js).
+- **Frontend:** HTML5, SCSS, JavaScript, AOS Library.
+- **Auxiliares:** Moment.js para gestão de fusos e datas.
 
-```bash
-# 1. Entre na pasta do projeto
-cd barbearia
+## 📦 Como rodar
+1. Instale as dependências:
+   ```bash
+   npm install
+   ```
+2. Inicie o bot:
+   ```bash
+   npm start
+   ```
+3. Escaneie o QR Code no terminal com seu WhatsApp.
 
-# 2. Apague a pasta node_modules antiga (versão incompatível)
-rm -rf node_modules package-lock.json
-
-# 3. Instale as dependências corretas
-npm install
-
-# 4. Rode o bot
-node chatbot.js
-```
-
----
-
-## Como usar
-
-1. Ao rodar `node chatbot.js`, um QR Code aparece no terminal.
-2. Abra o WhatsApp no celular → Dispositivos Conectados → Conectar Dispositivo.
-3. Escaneie o QR Code.
-4. O bot já começa a responder automaticamente.
-5. Pelo tempo curto, provavelmente ele não vai funcionar, então ele só está aí para constar no projeto.
-
-
----
-
-## Fluxo do bot
-
-Qualquer mensagem de saudação (`oi`, `olá`, `menu`, `bom dia`...) inicia o menu:
-
-```
-1 → Agendar horário
-      → Escolhe o serviço
-      → Escolhe o barbeiro
-      → Digita a data (DD/MM/YYYY)
-      → Escolhe o horário
-      → Confirma o agendamento
-
-2 → Ver serviços e preços
-3 → Falar com atendente
-4 → Localização e horários
-```
+## 📂 Estrutura de Pastas
+- `src/bot/`: Core do chatbot (MVC).
+- `src/shared/`: Funções utilitárias.
+- `src/web/`: Landing Page e estilos.
+- `assets/`: Recursos visuais do projeto.
 
 ---
-
-## Personalizar
-
-- **Serviços:** edite o objeto `SERVICOS` no `chatbot.js`
-- **Barbeiros:** edite o objeto `BARBEIROS`
-- **Horários:** edite o array `HORARIOS`
-- **Endereço:** edite a opção `4` do menu principal
+*Desenvolvido para proporcionar a melhor experiência entre barbeiro e cliente.*
