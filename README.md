@@ -24,16 +24,54 @@ O projeto foi totalmente reestruturado seguindo o padrão **Model-View-Controlle
 - **Frontend:** HTML5, SCSS, JavaScript, AOS Library.
 - **Auxiliares:** Moment.js para gestão de fusos e datas.
 
-## 🤖 Uso Recomendado com Gemini CLI
+## 🤖 Uso Recomendado com Antigravity CLI
 
-Este projeto foi otimizado e corrigido utilizando o **Gemini CLI**. Para garantir que o ambiente de execução (navegador, dependências e cache) seja configurado corretamente de forma automatizada, recomenda-se o uso deste agente.
+Para garantir que o ambiente de execução (navegador, dependências e cache) seja configurado corretamente de forma automatizada, recomenda-se o uso deste agente.
 
-### Passo a passo para configuração correta:
-1. **Instalação do Agente:** Certifique-se de ter o [Gemini CLI](https://github.com/google/gemini-cli) instalado em sua máquina.
-2. **Setup Automatizado:** Ao abrir a pasta do projeto, você pode solicitar ao Gemini CLI:
+### 📥 Como Instalar o Antigravity CLI
+
+O CLI instala o binário `agy` no seu sistema. Siga as instruções correspondentes ao seu sistema operacional:
+
+#### 🐧 Linux (Ubuntu e derivados) e macOS
+Abra o terminal e execute:
+```bash
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+```
+*Nota: Este script instalará o binário em `~/.local/bin/agy`.*
+
+#### 🪟 Windows (PowerShell)
+Abra o PowerShell e execute:
+```powershell
+irm https://antigravity.google/cli/install.ps1 | iex
+```
+
+#### 🪟 Windows (Prompt de Comando - CMD)
+Abra o Prompt de Comando e execute:
+```cmd
+curl -fsSL https://antigravity.google/cli/install.cmd -o install.cmd && install.cmd && del install.cmd
+```
+*Alternativamente, você também pode instalar via winget:*
+```cmd
+winget install Google.AntigravityCLI
+```
+
+---
+
+### 🚀 Como Usar o Antigravity CLI
+
+1. **Verifique a instalação:**
+   ```bash
+   agy --version
+   ```
+2. **Inicialize a TUI:** Navegue até o diretório do projeto e execute:
+   ```bash
+   agy
+   ```
+   *Nota: No primeiro lançamento, um assistente interativo guiará você pela configuração inicial.*
+3. **Setup Automatizado no Projeto:** Ao abrir a pasta do projeto, você pode solicitar ao Antigravity CLI:
    - *"Configure o ambiente e instale o navegador necessário para o bot."*
    - *"Corrija erros de sessão ou QR Code se o bot travar."*
-3. **Manutenção Sugerida:** O agente foi instruído a limpar arquivos de trava (`SingletonLock`) e atualizar o cache do WhatsApp Web sempre que necessário para evitar interrupções.
+4. **Manutenção Sugerida:** O agente foi instruído a limpar arquivos de trava (`SingletonLock`) e atualizar o cache do WhatsApp Web sempre que necessário para evitar interrupções.
 
 ## 📦 Como rodar (Manual)
 1. Instale as dependências:
