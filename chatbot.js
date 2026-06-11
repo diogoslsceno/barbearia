@@ -1,4 +1,4 @@
-const BarberBot = require("./src/bot/index");
+const BarberBot = require("./src/bot/index")
 
-const bot = new BarberBot();
-bot.initialize();
+const bot = new BarberBot()
+bot.initialize()
