@@ -17,6 +17,11 @@ O projeto foi totalmente reestruturado seguindo o padrão **Model-View-Controlle
 - ✅ Menu interativo com localização e serviços.
 - ✅ Landing Page responsiva com animações AOS.
 - ✅ Simulação de digitação humana no WhatsApp.
+- 🔄 **Reconexão Automática & Tratamento de Falhas:** Reinício automático do cliente e exclusão do cache de sessão corrompido (`.wwebjs_auth`) em eventos de desconexão inesperada (`disconnected`) ou falhas de login (`auth_failure`).
+- 💾 **Salvamento Local de QR Code:** Geração automática do QR Code como imagem em `assets/qrcode.png` para visualização em ambientes sem TTY interativo (ex: VPS, Docker, PM2). O arquivo é autolimpante após o login.
+- 🧹 **Gestão e Proteção de Memória (TTL):** Remoção em segundo plano (unref background timer) de sessões inativas há mais de 30 minutos, eliminando riscos de vazamento de memória (Memory Leak).
+- 🚦 **Fila Sequencial Antitravamento:** Processamento enfileirado de mensagens por número de telefone, garantindo ordenação cronológica e prevenindo condições de corrida (*race conditions*).
+- 💥 **Segurança contra Crashes do Puppeteer:** Captura global de `unhandledRejection` e `uncaughtException` do processo Node.
 
 ## 🛠️ Tecnologias
 

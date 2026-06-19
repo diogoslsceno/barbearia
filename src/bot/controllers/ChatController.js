@@ -7,6 +7,7 @@ class ChatController {
   constructor(client) {
     this.client = client
     this.bookingController = new BookingController(client)
+    this.userQueues = {} // Filas de mensagens em processamento por número de telefone
   }
 
   async handleMessage(msg) {
@@ -15,6 +16,50 @@ class ChatController {
       const chat = await msg.getChat()
       if (chat.isGroup) return
 
+      const number = msg.from
+
+      // Inicializa a fila do usuário caso não exista
+      if (!this.userQueues[number]) {
+        this.userQueues[number] = {
+          messages: [],
+          processing: false,
+        }
+      }
+
+      // Adiciona a mensagem recebida na fila do usuário
+      this.userQueues[number].messages.push({ msg, chat })
+
+      // Se a fila não está processando, inicia o processamento sequencial
+      if (!this.userQueues[number].processing) {
+        await this._processQueue(number)
+      }
+    } catch (err) {
+      console.error("❌ Erro ao gerenciar fila de mensagens:", err)
+    }
+  }
+
+  async _processQueue(number) {
+    const queue = this.userQueues[number]
+    if (!queue || queue.processing) return
+
+    queue.processing = true
+
+    while (queue.messages.length > 0) {
+      const { msg, chat } = queue.messages.shift()
+      try {
+        await this._processMessage(msg, chat)
+      } catch (err) {
+        console.error(`❌ Erro ao processar mensagem na fila de ${number}:`, err)
+      }
+    }
+
+    queue.processing = false
+    // Libera a memória limpando a fila vazia
+    delete this.userQueues[number]
+  }
+
+  async _processMessage(msg, chat) {
+    try {
       const number = msg.from
       const text = msg.body ? msg.body.trim() : ""
       const textL = text.toLowerCase()
@@ -84,7 +129,7 @@ class ChatController {
       await this.client.sendMessage(number, BotView.mensagemBoasVindas())
       SessionModel.setStep(number, "menu")
     } catch (err) {
-      console.error("❌ Erro no ChatController:", err)
+      console.error("❌ Erro interno no processamento da mensagem:", err)
     }
   }
 }
